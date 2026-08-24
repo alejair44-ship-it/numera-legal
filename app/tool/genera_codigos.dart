@@ -1,3 +1,4 @@
+// ignore_for_file: avoid_print
 // Genera códigos de activación PRO válidos.
 //
 //   dart run tool/genera_codigos.dart CAKE ROSA DULC
