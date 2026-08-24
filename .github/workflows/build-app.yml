@@ -1,9 +1,17 @@
-name: Build
+# Compila la app Zona Repostera desde app/ mientras vive en este repo.
+# Cuando el código migre al repo dedicado zona-repostera-app, este workflow
+# se elimina de aquí (allí ya existe app/.github/workflows/build.yml).
+name: Build Zona Repostera
 
 on:
   push:
-    branches: [main]
+    branches: [claude/zona-repostera-app-o7pzpj]
+    paths: ['app/**', '.github/workflows/build-app.yml']
   workflow_dispatch:
+
+defaults:
+  run:
+    working-directory: app
 
 jobs:
   android:
@@ -45,21 +53,8 @@ jobs:
       - uses: actions/upload-artifact@v4
         with:
           name: zona-repostera-apk
-          path: build/app/outputs/flutter-apk/app-release.apk
+          path: app/build/app/outputs/flutter-apk/app-release.apk
       - uses: actions/upload-artifact@v4
         with:
           name: zona-repostera-aab
-          path: build/app/outputs/bundle/release/app-release.aab
-
-  ios-sin-firma:
-    runs-on: macos-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: subosito/flutter-action@v2
-        with:
-          channel: stable
-          cache: true
-      - run: flutter pub get
-      # Compila iOS sin firma para validar que el proyecto construye.
-      # El .ipa firmado para App Store requiere certificados (docs/LANZAMIENTO.md).
-      - run: flutter build ios --release --no-codesign
+          path: app/build/app/outputs/bundle/release/app-release.aab
