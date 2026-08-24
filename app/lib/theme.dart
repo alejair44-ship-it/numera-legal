@@ -19,6 +19,7 @@ class ZR {
   static ThemeData theme() {
     final base = ThemeData(
       useMaterial3: true,
+      fontFamily: 'Karla',
       colorScheme: ColorScheme.fromSeed(
         seedColor: dorado,
         primary: dorado,
@@ -37,8 +38,9 @@ class ZR {
         titleTextStyle: TextStyle(
           color: cafe,
           fontSize: 22,
-          fontWeight: FontWeight.w600,
-          fontFamily: 'serif',
+          fontWeight: FontWeight.w700,
+          fontFamily: 'Karla',
+          letterSpacing: .2,
         ),
       ),
       cardTheme: CardThemeData(

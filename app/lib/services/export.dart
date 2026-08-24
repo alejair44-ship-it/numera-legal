@@ -1,11 +1,8 @@
-import 'dart:io';
-
 import 'package:intl/intl.dart';
-import 'package:path_provider/path_provider.dart';
-import 'package:share_plus/share_plus.dart';
 
 import '../models/models.dart';
 import '../theme.dart';
+import 'compartir_stub.dart' if (dart.library.js_interop) 'compartir_web.dart';
 import 'repo.dart';
 
 /// Exportación a CSV (abre el diálogo de compartir del sistema). Solo PRO.
@@ -21,14 +18,8 @@ class ExportService {
   String _csv(List<List<Object?>> rows) =>
       rows.map((r) => r.map(_csvCell).join(',')).join('\n');
 
-  Future<void> _compartir(String nombre, String contenido) async {
-    final dir = await getTemporaryDirectory();
-    final file = File('${dir.path}/$nombre');
-    await file.writeAsString('﻿$contenido'); // BOM para Excel
-    await SharePlus.instance.share(
-      ShareParams(files: [XFile(file.path)], subject: nombre),
-    );
-  }
+  Future<void> _compartir(String nombre, String contenido) =>
+      compartirCsv(nombre, contenido);
 
   Future<void> reporteMensual(DateTime mes) async {
     final r = await repo.resumenMes(mes);

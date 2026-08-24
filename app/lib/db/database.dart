@@ -1,6 +1,8 @@
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 
+import 'factory_stub.dart' if (dart.library.js_interop) 'factory_web.dart';
+
 /// Esquema local (SQLite). Diseñado espejo del modelo Supabase de la Fase 1b
 /// (sincronización en la nube): mismas tablas, mismos nombres.
 /// Regla del sistema: si un dato puede calcularse, no se guarda.
@@ -9,6 +11,19 @@ class ZRDatabase {
 
   static Future<Database> get instance async {
     if (_db != null) return _db!;
+    final webFactory = plataformaFactory();
+    if (webFactory != null) {
+      // Web (demo en navegador): SQLite en WebAssembly + IndexedDB.
+      _db = await webFactory.openDatabase(
+        'zona_repostera.db',
+        options: OpenDatabaseOptions(
+          version: 1,
+          onConfigure: (db) => db.execute('PRAGMA foreign_keys = ON'),
+          onCreate: _create,
+        ),
+      );
+      return _db!;
+    }
     final dir = await getDatabasesPath();
     _db = await openDatabase(
       join(dir, 'zona_repostera.db'),
